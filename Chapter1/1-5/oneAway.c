@@ -14,53 +14,43 @@ bool oneAway(char str1[], char str2[])
 		return false;
 	}
 
-	//replacement check
-	if (len1 == len2)
+	//generalizing
+	char* bigStr;
+	char* smallStr;
+	int smallLen;
+	if (len1 > len2)
 	{
-		bool foundDifference = false;
-		for (int i=0; i < len1; i++)
-		{
-			if (str1[i] != str2[i])
-			{
-				if (foundDifference)
-				{
-					return false;
-				}
-				else
-				{
-					foundDifference = true;
-				}
-			}
-		}
+		smallLen = len2;
+		bigStr = str1;
+		smallStr = str2;
 	}
 	else
 	{
-		//insertion and takeaway are symmetric processes:
-		// find big and small, run algorithm accordingly
-		char* bigStr;
-		char* smallStr;
-		int smallLen;
-		if (len1 > len2)
-		{
-			smallLen = len2;
-			bigStr = str1;
-			smallStr = str2;
-		}
-		else
-		{
-			smallLen = len1;
-			bigStr = str2;
-			smallStr = str1;
-		}
+		smallLen = len1;
+		bigStr = str2;
+		smallStr = str1;
+	}
 
-		//iterate with respect to the small so we don't go off the end
-		// (the unchecked last character may be the insert)
-		for (int i=0; i < smallLen; i++)
+	//iterate with respect to the small so we don't go off the end
+	// (the unchecked last character may be the insert)
+	for (int i=0; i < smallLen; i++)
+	{
+		if (bigStr[i] != smallStr[i])
 		{
-			if (bigStr[i] != smallStr[i])
+			//if strings are different sizes, skip the current and check rest
+			// else, we check whether the remainder are the same
+			if (len1 != len2)
 			{
 				return strcmp(bigStr+(i+1)*sizeof(char),
 					smallStr+i*sizeof(char)) == 0;
+			}
+			else
+			{
+				//don't worry about running off the end of the string here
+				// even if i is at the last value, the pointer will compare
+				// the null terminator with another null
+				return strcmp(bigStr+(i+1)*sizeof(char),
+					smallStr+(i+1)*sizeof(char)) == 0;
 			}
 		}
 	}
