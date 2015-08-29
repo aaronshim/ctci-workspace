@@ -3,12 +3,14 @@ class Point
   attr_accessor :x, :y
   
   def initialize(x=0.0,y=0.0)
-    @x = x
-    @y = y
+    # we can use Kernel#Float instead if we want noisy failure
+    @x = x.to_f
+    @y = y.to_f
   end
   
   #x and then y for ordering
   def <=>(point)
+    raise "Must compare to another point" unless point.is_a? Point
     if self.x < point.x
       -1
     elsif self.x > point.x
@@ -35,6 +37,7 @@ class Line
   attr_accessor :start_point, :end_point, :slope, :intercept
   
   def initialize(start_point=Point.new(1.0,0.0),end_point=Point.new(0.0,0.0))
+    raise "Must input two points to define a line" unless start_point.is_a? Point and end_point.is_a? Point
     @start_point = start_point
     @end_point = end_point
     raise "Cannot compute slope of a line with same point as endpoints" if start_point == end_point
